@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -55,6 +55,20 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Century Gothic.ttf</string>
+		<string>CenturyGothic.ttf</string>
+		<string>GOTHIC.TTF</string>
+		<string>GOTHICB.TTF</string>
+		<string>GOTHICB0.TTF</string>
+		<string>GOTHICBI.TTF</string>
+		<string>GOTHICI.TTF</string>
+		<string>Gothic-Bold.TTF</string>
+		<string>Gothic-BoldItalic.TTF</string>
+		<string>Gothic-Italic.TTF</string>
+		<string>Gothic-Regular.TTF</string>
+		<string>CenturyGothic-Bold.ttf</string>
+		<string>CenturyGothic-BoldItalic.ttf</string>
+		<string>CenturyGothic-Italic.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

@@ -33,12 +33,15 @@ import LottieView from 'lottie-react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animation from '../splashLottie.json';
+import {colors} from './shared/styles';
+import {H3} from './shared/Typography';
+import LinearGradient from 'react-native-linear-gradient';
 
 // import Loader from './Components/Loader';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const LoginScreen = ({navigation}) => {
+const Auth = ({navigation}) => {
   const connector = useWalletConnect();
   const {
     authenticate,
@@ -90,67 +93,53 @@ const LoginScreen = ({navigation}) => {
             justifyContent: 'center',
             alignContent: 'center',
           }}>
-          <Image
-            style={{flex: 1, maxWidth: '100%', alignSelf: 'center'}}
-            source={require('../eth.png')}
-          />
           <View style={{flex: 1}}>
-            <KeyboardAvoidingView enabled>
-              <View style={{alignItems: 'center'}}>
-                <LottieView source={Animation} loop autoPlay />
-                <Image
-                  source={require('../moralis-logo.png')}
-                  style={{
-                    width: '50%',
-                    height: 100,
-                    resizeMode: 'contain',
-                    margin: 30,
-                  }}
-                />
-              </View>
+            <LinearGradient
+              colors={['rgba(206, 255, 103, 0.3)', 'rgba(147, 130, 252, 0.3)']}>
+              <KeyboardAvoidingView enabled>
+                <View>
+                  {authError && (
+                    <Portal>
+                      <Dialog visible={visible} onDismiss={hideDialog}>
+                        <Dialog.Title>Authentication error:</Dialog.Title>
+                        <Dialog.Content>
+                          <Paragraph>
+                            {authError ? authError.message : ''}
+                          </Paragraph>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                          <Button onPress={hideDialog}>Done</Button>
+                        </Dialog.Actions>
+                      </Dialog>
+                    </Portal>
+                  )}
+                  {isAuthenticating && (
+                    <ActivityIndicator animating={true} color={'white'} />
+                  )}
+                </View>
 
-              <View>
-                {authError && (
-                  <Portal>
-                    <Dialog visible={visible} onDismiss={hideDialog}>
-                      <Dialog.Title>Authentication error:</Dialog.Title>
-                      <Dialog.Content>
-                        <Paragraph>
-                          {authError ? authError.message : ''}
-                        </Paragraph>
-                      </Dialog.Content>
-                      <Dialog.Actions>
-                        <Button onPress={hideDialog}>Done</Button>
-                      </Dialog.Actions>
-                    </Dialog>
-                  </Portal>
-                )}
-                {isAuthenticating && (
-                  <ActivityIndicator animating={true} color={'white'} />
-                )}
-              </View>
-
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                activeOpacity={0.5}
-                onPress={handleCryptoLogin}>
-                <Text style={styles.buttonTextStyle}>Crypto Wallet Login</Text>
-              </TouchableOpacity>
-              <Text
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  activeOpacity={0.5}
+                  onPress={handleCryptoLogin}>
+                  <H3>CONNECT YOUR WALLET</H3>
+                </TouchableOpacity>
+                {/* <Text
                 style={styles.registerTextStyle}
                 onPress={() =>
                   Linking.openURL('https://ethereum.org/en/wallets/')
                 }>
                 What are wallets?
-              </Text>
-            </KeyboardAvoidingView>
+            </Text> */}
+              </KeyboardAvoidingView>
+            </LinearGradient>
           </View>
         </ScrollView>
       </View>
     </Provider>
   );
 };
-export default LoginScreen;
+export default Auth;
 
 const styles = StyleSheet.create({
   mainBody: {
@@ -168,23 +157,20 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#7DE24E',
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+    color: colors.black,
+    borderColor: colors.black,
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    justifyContent: 'center',
+    borderRadius: 20,
     marginLeft: 35,
     marginRight: 35,
-    marginTop: 20,
-    marginBottom: 25,
-  },
-  buttonTextStyle: {
-    color: '#FFFFFF',
-    paddingVertical: 10,
-    fontSize: 16,
-    fontWeight: '600',
+    marginTop: windowHeight * 0.8,
+    marginBottom: windowHeight * 0.2,
   },
   inputStyle: {
     flex: 1,
