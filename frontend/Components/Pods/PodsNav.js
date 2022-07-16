@@ -1,7 +1,7 @@
 import React from 'react';
-import Contact from './Contact';
+import Contact from './Contact/Contact';
 import Pods from './Pods';
-import Scan from './Scan';
+import Scan from './Scan/Scan.js';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';

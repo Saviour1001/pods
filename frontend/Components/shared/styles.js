@@ -4,6 +4,7 @@ export const colors = {
   while: '#FFFFFF',
   black: '#000000',
   green: '#CEFF67',
+  lightgreen: 'rgba(206, 255, 103, 0.3)',
   purple: '#9382FC',
   gray: '#AAAAAA',
 };

@@ -14,6 +14,12 @@ target 'EthereumRNBoilerplate' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'react-native-mmkv-storage', :path => '../node_modules/react-native-mmkv-storage'
+
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+
   target 'EthereumRNBoilerplateTests' do
     inherit! :complete
     # Pods for testing

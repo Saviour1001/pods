@@ -9,12 +9,13 @@ import iconNames from '../shared/iconNames';
 import HeaderWithBack from './Common/HeaderWithBack';
 import BottomButton from './Common/BottomButton';
 
-const CreatePod = ({navigation: {goBack}}) => {
+const CreatePod = ({navigation}) => {
+  const {goBack} = navigation;
   const handelFileInput = () => {
     console.log('Please take input files');
   };
   const handelShareWith = () => {
-    console.log('Please take pod members');
+    navigation.navigate('ShareWith');
   };
   const handelCreatePod = () => {
     console.log('Create new pod');

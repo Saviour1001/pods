@@ -11,7 +11,12 @@ import {LogBox} from 'react-native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Auth from './Components/Auth';
 import PodsNav from './Components/Pods/PodsNav.js';
+import AddContact from './Components/Pods/Contact/AddContact.js';
+import YourDetails from './Components/Pods/Contact/YourDetails.js';
+import ChangeName from './Components/Pods/Contact/ChangeName.js';
 import CreatePod from './Components/Pods/CreatePod.js';
+import ShareWith from './Components/Pods/ShareWith.js';
+import PodDetailed from './Components/Pods/PodDetailed.js';
 import RecentTransactions from './Components/RecentTransactions/RecentTransactions';
 import Assets from './Components/Assets/Assets';
 import Transfer from './Components/Transfer/Transfer';
@@ -128,7 +133,7 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Auth">
+      <Stack.Navigator initialRouteName="Pods">
         {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen
           name="Auth"
@@ -143,6 +148,31 @@ function App(): JSX.Element {
         <Stack.Screen
           name="CreatePod"
           component={CreatePod}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddContact"
+          component={AddContact}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="YourDetails"
+          component={YourDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChangeName"
+          component={ChangeName}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ShareWith"
+          component={ShareWith}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PodDetailed"
+          component={PodDetailed}
           options={{headerShown: false}}
         />
         {/* Navigation Drawer as a landing page */}
