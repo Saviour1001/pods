@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {User} from '../../../../assets/image';
@@ -17,6 +18,39 @@ import {contactData} from '../Common/Constant';
 import FloatingAddButton from '../Common/FloatingAddButton';
 
 const Contact = ({navigation}) => {
+  const [contacts, setContacts] = useState();
+  console.log(contacts);
+  const [name, setName] = useState();
+  const getMyName = async () => {
+    try {
+      const myName = await AsyncStorage.getItem('myName');
+      if (myName !== null) {
+        setName(myName);
+      } else {
+        console.log('nai milla');
+      }
+    } catch (error) {
+      // Error retrieving data
+      console.log('error hai bhai', error);
+    }
+  };
+  const getMyContacts = async () => {
+    try {
+      const value = await AsyncStorage.getItem('myContacts');
+      if (value !== null) {
+        setContacts(JSON.parse(value));
+      } else {
+        console.log('nai milla');
+      }
+    } catch (error) {
+      // Error retrieving data
+      console.log('error hai bhai', error);
+    }
+  };
+  useEffect(() => {
+    getMyName();
+    getMyContacts();
+  }, []);
   const Header = () => {
     return (
       <View style={styles.viewContainer}>
@@ -47,7 +81,7 @@ const Contact = ({navigation}) => {
                 style={{width: 50, height: 50, alignSelf: 'center'}}
               />
             </View>
-            <H2>Manan</H2>
+            <H2>{name}</H2>
           </View>
           <Icon name={iconNames.chevronRight} size={18} />
         </TouchableOpacity>
@@ -72,10 +106,15 @@ const Contact = ({navigation}) => {
     <View style={{flex: 1}}>
       <Header />
       <FlatList
+        data={contacts}
+        renderItem={SingleContact}
+        keyExtractor={item => item.walletAddress}
+      />
+      {/* <FlatList
         data={contactData}
         renderItem={SingleContact}
         keyExtractor={item => item.id}
-      />
+      /> */}
       <FloatingAddButton action={() => navigation.navigate('AddContact')} />
     </View>
   );

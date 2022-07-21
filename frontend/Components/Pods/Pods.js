@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,17 +6,23 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Modal,
+  AsyncStorage,
 } from 'react-native';
 import {H1, H2, H3, P1, P2} from '../shared/Typography';
-import {colors} from '../shared/styles';
+import {colors, globalStyles} from '../shared/styles';
 import FloatingAddButton from './Common/FloatingAddButton';
+import InputField from './Common/InputField';
+import GreenButton from './Common/GreenButton';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Pods = ({navigation}) => {
   const [activeTab, setactiveTab] = useState(0);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [name, setName] = useState();
+  console.log('name-->', name);
   const onPressZero = () => {
     setactiveTab(0);
   };
@@ -27,6 +33,35 @@ const Pods = ({navigation}) => {
     console.log('Create New Pod');
     navigation.navigate('CreatePod');
   };
+
+  const storeMyName = async () => {
+    try {
+      await AsyncStorage.setItem('myName', name);
+      setModalVisible(false);
+      getMyName();
+    } catch (error) {
+      // Error saving data
+      console.log('storeData ka error,', error);
+    }
+  };
+  const getMyName = async () => {
+    try {
+      const value = await AsyncStorage.getItem('myName');
+      if (value !== null) {
+        // We have data!!
+        console.log('User Ka naam-->', value);
+      } else {
+        console.log('nai milla');
+        setModalVisible(true);
+      }
+    } catch (error) {
+      // Error retrieving data
+      console.log('error hai bhai', error);
+    }
+  };
+  useEffect(() => {
+    getMyName();
+  }, []);
 
   const TabBar = () => {
     return (
@@ -60,6 +95,56 @@ const Pods = ({navigation}) => {
   return (
     // This View is imp for Floating button to work properly
     <View style={{flex: 1}}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }}>
+          <View
+            style={[
+              globalStyles.border,
+              {
+                width: windowWidth * 0.85,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'white',
+                paddingVertical: 50,
+              },
+            ]}>
+            <H2>WELCOME TO</H2>
+            <H2 style={{fontSize: 35}}>PODs</H2>
+            <H3
+              style={{
+                width: windowWidth * 0.5,
+                textAlign: 'center',
+                marginTop: 30,
+              }}>
+              What would you like to be called?
+            </H3>
+            <InputField
+              containerStyle={{width: windowWidth * 0.7}}
+              placeholder="Enter your name"
+              value={name}
+              setvalue={setName}
+            />
+            <GreenButton
+              buttonStyle={{marginTop: 30}}
+              label="CONFIRM"
+              action={() => storeMyName()}
+            />
+          </View>
+        </View>
+      </Modal>
       <ScrollView>
         <View style={styles.viewContainer}>
           <H1 style={{marginBottom: 30}}>PODS</H1>

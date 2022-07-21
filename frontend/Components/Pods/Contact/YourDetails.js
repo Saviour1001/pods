@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Image, TouchableOpacity, AsyncStorage} from 'react-native';
 import {CopyPast, User} from '../../../../assets/image';
 import Icon from '../../shared/Icon';
 import iconNames from '../../shared/iconNames';
@@ -7,8 +7,27 @@ import {colors, globalStyles} from '../../shared/styles';
 import {H3} from '../../shared/Typography';
 import {contactData} from '../Common/Constant';
 import HeaderWithBack from '../Common/HeaderWithBack';
+import {useMoralisDapp} from '../../../providers/MoralisDappProvider/MoralisDappProvider';
 
 const YourDetails = ({navigation}) => {
+  const {walletAddress, chainId} = useMoralisDapp();
+  const [name, setName] = useState();
+  const getMyName = async () => {
+    try {
+      const myName = await AsyncStorage.getItem('myName');
+      if (myName !== null) {
+        setName(myName);
+      } else {
+        console.log('nai milla');
+      }
+    } catch (error) {
+      // Error retrieving data
+      console.log('error hai bhai', error);
+    }
+  };
+  useEffect(() => {
+    getMyName();
+  }, []);
   const {goBack} = navigation;
   return (
     <View style={{margin: 30}}>
@@ -38,7 +57,7 @@ const YourDetails = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.navigate('ChangeName')}
           style={globalStyles.row}>
-          <H3 style={{marginRight: 10}}>Manan</H3>
+          <H3 style={{marginRight: 10}}>{name}</H3>
           <Icon name={iconNames.chevronRight} size={16} />
         </TouchableOpacity>
       </View>
@@ -47,10 +66,10 @@ const YourDetails = ({navigation}) => {
 
         <TouchableOpacity style={globalStyles.row}>
           <H3 numberOfLines={1} ellipsizeMode="head" style={{marginRight: 10}}>
-            {contactData[0].walletAddress.substring(0, 6)}...
-            {contactData[0].walletAddress.substring(
-              contactData[0].walletAddress.length - 4,
-              contactData[0].walletAddress.length,
+            {walletAddress.substring(0, 6)}...
+            {walletAddress.substring(
+              walletAddress.length - 4,
+              walletAddress.length,
             )}
           </H3>
           <Image source={CopyPast} />

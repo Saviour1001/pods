@@ -2,6 +2,7 @@ import React from 'react';
 import {View, TextInput} from 'react-native';
 import {H2, H3} from '../../shared/Typography';
 import {colors, fontFamilies} from '../../shared/styles';
+import {onChange} from 'react-native-reanimated';
 
 const InputField = ({
   LabelName,
@@ -16,6 +17,8 @@ const InputField = ({
     <View style={containerStyle}>
       <H3 style={{color: colors.gray, marginBottom: 15}}>{LabelName}</H3>
       <TextInput
+        value={value}
+        onChangeText={setvalue}
         placeholder={placeholder}
         placeholderTextColor={colors.gray}
         style={[
@@ -32,6 +35,7 @@ const InputField = ({
             height: 45,
             color: colors.black,
             paddingHorizontal: 15,
+            backgroundColor: 'white',
           },
           textInputStyles,
         ]}

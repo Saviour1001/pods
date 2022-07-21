@@ -34,4 +34,11 @@ export const globalStyles = StyleSheet.create({
   column: {
     flexDirection: 'column',
   },
+  border: {
+    borderColor: colors.black,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+  },
 });
