@@ -47,6 +47,10 @@ const ShareWith = ({navigation}) => {
           flexDirection: 'row',
           alignItems: 'center',
         }}>
+        <Image
+          source={item.selected ? Checked : UnChecked}
+          style={{marginRight: 20}}
+        />
         <H3>{item.name}</H3>
       </TouchableOpacity>
     );
@@ -56,7 +60,7 @@ const ShareWith = ({navigation}) => {
       <HeaderWithBack title="SHARE WITH" handleBack={() => goBack()} />
       <View style={{marginTop: 20, height: windowHeight * 0.75}}>
         <FlatList
-          data={contactData}
+          data={data}
           renderItem={SingleContact}
           keyExtractor={item => item.id}
         />

@@ -65,6 +65,7 @@
     "react-native-gesture-handler": "~1.10.2",
     "react-native-get-random-values": "1.5.0",
     "react-native-icomoon": "^0.1.1",
+    "react-native-image-crop-picker": "^0.38.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-localhost": "1.0.0",
     "react-native-os": "^1.0.1",
