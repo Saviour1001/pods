@@ -8,7 +8,7 @@ const BottomButton = ({label, action}) => {
     <TouchableOpacity
       onPress={action}
       style={{
-        backgroundColor: colors.green,
+        backgroundColor: colors.primary,
         borderWidth: 1,
         borderBottomWidth: 3,
         borderRightWidth: 3,

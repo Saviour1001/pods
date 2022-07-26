@@ -15,7 +15,7 @@ const HeaderWithBack = ({title, handleBack}) => {
           height: 40,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: colors.green,
+          backgroundColor: colors.primary,
           borderColor: colors.black,
           borderRadius: 20,
           borderWidth: 1,

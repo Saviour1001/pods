@@ -13,7 +13,7 @@ const FloatingAddButton = ({action}) => {
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.green,
+        backgroundColor: colors.primary,
         borderColor: colors.black,
         borderRadius: 25,
         borderWidth: 1,

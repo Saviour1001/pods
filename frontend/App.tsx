@@ -133,7 +133,7 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Auth">
+      <Stack.Navigator initialRouteName="Pods">
         {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen
           name="Auth"

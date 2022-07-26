@@ -122,7 +122,7 @@ const Contact = ({navigation}) => {
 
 const styles = StyleSheet.create({
   viewContainer: {
-    backgroundColor: colors.lightgreen,
+    backgroundColor: colors.primaryLight,
     padding: 30,
     alignItems: 'center',
   },

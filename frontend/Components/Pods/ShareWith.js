@@ -49,7 +49,7 @@ const ShareWith = ({navigation}) => {
         }}>
         <Image
           source={item.selected ? Checked : UnChecked}
-          style={{marginRight: 20}}
+          style={{marginRight: 10, width: 20, height: 20}}
         />
         <H3>{item.name}</H3>
       </TouchableOpacity>

@@ -60,7 +60,7 @@ const Scan = () => {
         style={{
           width: 50,
           height: 50,
-          backgroundColor: colors.green,
+          backgroundColor: colors.primary,
           borderRadius: 25,
           borderWidth: 1,
           borderBottomWidth: 3,
@@ -69,7 +69,7 @@ const Scan = () => {
           justifyContent: 'center',
           alignSelf: 'center',
         }}>
-        <Image source={ScanQRCode} />
+        <Image source={ScanQRCode} style={{width: 30, height: 30}} />
       </TouchableOpacity>
     </View>
   );

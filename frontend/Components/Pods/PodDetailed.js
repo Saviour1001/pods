@@ -7,7 +7,7 @@ import HeaderWithBack from './Common/HeaderWithBack';
 const PodDetailed = () => {
   return (
     <View>
-      <View style={{backgroundColor: colors.lightgreen, padding: 30}}>
+      <View style={{backgroundColor: colors.primaryLight, padding: 30}}>
         <HeaderWithBack title="POD NAME" />
         <H3 style={{alignSelf: 'center', marginTop: 20, marginBottom: 5}}>
           POD DESCRIPTION POD DESCRIPTION POD DESCRIPTION POD DESCRIPTION

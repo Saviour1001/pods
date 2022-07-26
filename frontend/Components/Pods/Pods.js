@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   activetab: {
-    backgroundColor: colors.green,
+    backgroundColor: colors.primary,
     borderColor: colors.black,
     borderBottomWidth: 2.5,
     borderRightWidth: 3,

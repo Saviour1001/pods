@@ -3,6 +3,8 @@ import {StyleSheet} from 'react-native';
 export const colors = {
   while: '#FFFFFF',
   black: '#000000',
+  primary: '#BEADEF',
+  primaryLight: 'rgba(190, 173, 239, 0.3)',
   green: '#CEFF67',
   lightgreen: 'rgba(206, 255, 103, 0.3)',
   purple: '#9382FC',
