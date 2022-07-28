@@ -23,7 +23,6 @@ const ShareWith = ({navigation}) => {
   });
 
   const [data, setData] = useState(initData);
-  console.log('data--->', data);
   const handleOnPress = item => {
     const newItem = data.map(val => {
       if (val.id === item.id) {
@@ -33,6 +32,15 @@ const ShareWith = ({navigation}) => {
       }
     });
     setData(newItem);
+  };
+  const handleSubmit = () => {
+    let wallets = [];
+    data.map(item => {
+      if (item.selected) {
+        wallets.push(item.walletAddress);
+      }
+    });
+    navigation.navigate('CreatePod', {shareWith: wallets});
   };
 
   // TODO Add logic around item.selected
@@ -65,7 +73,7 @@ const ShareWith = ({navigation}) => {
           keyExtractor={item => item.id}
         />
       </View>
-      <BottomButton label="CONFIRM" />
+      <BottomButton label="CONFIRM" action={handleSubmit} />
     </View>
   );
 };

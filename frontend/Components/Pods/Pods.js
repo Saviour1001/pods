@@ -31,7 +31,7 @@ const Pods = ({navigation}) => {
   };
   const handleAdd = () => {
     console.log('Create New Pod');
-    navigation.navigate('CreatePod');
+    navigation.navigate('CreatePod', {shareWith: []});
   };
 
   const storeMyName = async () => {

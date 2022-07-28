@@ -15,11 +15,15 @@ import {
   useWeb3ExecuteFunction,
 } from 'react-moralis';
 
-const CreatePod = ({navigation}) => {
+const CreatePod = ({route, navigation}) => {
+  const {shareWith} = route.params;
+  console.log('Share With-->', shareWith);
+
   const {Moralis, account} = useMoralis();
   const {goBack} = navigation;
   const handelFileInput = () => {
     console.log('Please take input files');
+    w;
     ImagePicker.openPicker({multiple: true, includeBase64: true}).then(
       images => {
         images.map(image => {
