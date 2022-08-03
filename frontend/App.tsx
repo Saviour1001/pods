@@ -17,6 +17,7 @@ import ChangeName from './Components/Pods/Contact/ChangeName.js';
 import CreatePod from './Components/Pods/CreatePod.js';
 import ShareWith from './Components/Pods/ShareWith.js';
 import PodDetailed from './Components/Pods/PodDetailed.js';
+import Scanner from './Components/Pods/Scan/Scanner.js';
 import RecentTransactions from './Components/RecentTransactions/RecentTransactions';
 import Assets from './Components/Assets/Assets';
 import Transfer from './Components/Transfer/Transfer';
@@ -133,7 +134,7 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Pods">
+      <Stack.Navigator initialRouteName="Auth">
         {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen
           name="Auth"
@@ -173,6 +174,11 @@ function App(): JSX.Element {
         <Stack.Screen
           name="PodDetailed"
           component={PodDetailed}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ScanQR"
+          component={Scanner}
           options={{headerShown: false}}
         />
         {/* Navigation Drawer as a landing page */}

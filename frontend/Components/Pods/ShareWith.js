@@ -3,14 +3,12 @@ import {View, FlatList, Dimensions, Image} from 'react-native';
 import HeaderWithBack from './Common/HeaderWithBack';
 import BottomButton from './Common/BottomButton';
 import {colors} from '../shared/styles';
-import {contactData} from './Common/Constant';
 import {H3, P1, P2} from '../shared/Typography';
 import {Checked, UnChecked} from '../../../assets/image';
 import {TouchableOpacity} from 'react-native';
+import {useMoralisDapp} from '../../providers/MoralisDappProvider/MoralisDappProvider';
 
 const windowHeight = Dimensions.get('window').height;
-
-const initData = JSON.parse(JSON.stringify(contactData));
 
 // const [data, setData] = useState(initialState);
 
@@ -18,14 +16,15 @@ const ShareWith = ({navigation}) => {
   const {goBack} = navigation;
 
   // Adding selected key to data
+  const {contacts} = useMoralisDapp();
+  const initData = contacts;
   initData.map(i => {
     i.selected = false;
   });
-
   const [data, setData] = useState(initData);
   const handleOnPress = item => {
     const newItem = data.map(val => {
-      if (val.id === item.id) {
+      if (val.walletAddress === item.walletAddress) {
         return {...val, selected: !val.selected};
       } else {
         return val;
@@ -70,7 +69,7 @@ const ShareWith = ({navigation}) => {
         <FlatList
           data={data}
           renderItem={SingleContact}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
       <BottomButton label="CONFIRM" action={handleSubmit} />

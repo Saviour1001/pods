@@ -14,6 +14,7 @@ import {colors, globalStyles} from '../shared/styles';
 import FloatingAddButton from './Common/FloatingAddButton';
 import InputField from './Common/InputField';
 import GreenButton from './Common/GreenButton';
+import {useMoralisDapp} from '../../providers/MoralisDappProvider/MoralisDappProvider';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,8 +22,9 @@ const windowHeight = Dimensions.get('window').height;
 const Pods = ({navigation}) => {
   const [activeTab, setactiveTab] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [name, setName] = useState();
-  console.log('name-->', name);
+  const {name, getName, storeName} = useMoralisDapp();
+  const [newName, setNewName] = useState(name);
+  console.log('name-->', newName);
   const onPressZero = () => {
     setactiveTab(0);
   };
@@ -34,34 +36,20 @@ const Pods = ({navigation}) => {
     navigation.navigate('CreatePod', {shareWith: []});
   };
 
-  const storeMyName = async () => {
-    try {
-      await AsyncStorage.setItem('myName', name);
-      setModalVisible(false);
-      getMyName();
-    } catch (error) {
-      // Error saving data
-      console.log('storeData ka error,', error);
-    }
+  const handleSudmit = () => {
+    storeName({name: newName});
   };
-  const getMyName = async () => {
-    try {
-      const value = await AsyncStorage.getItem('myName');
-      if (value !== null) {
-        // We have data!!
-        console.log('User Ka naam-->', value);
-      } else {
-        console.log('nai milla');
-        setModalVisible(true);
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.log('error hai bhai', error);
-    }
-  };
+
   useEffect(() => {
-    getMyName();
+    getName();
   }, []);
+  useEffect(() => {
+    if (name === null) {
+      setModalVisible(true);
+    } else {
+      setModalVisible(false);
+    }
+  }, [name]);
 
   const TabBar = () => {
     return (
@@ -134,13 +122,13 @@ const Pods = ({navigation}) => {
             <InputField
               containerStyle={{width: windowWidth * 0.7}}
               placeholder="Enter your name"
-              value={name}
-              setvalue={setName}
+              value={newName}
+              setvalue={setNewName}
             />
             <GreenButton
               buttonStyle={{marginTop: 30}}
               label="CONFIRM"
-              action={() => storeMyName()}
+              action={handleSudmit}
             />
           </View>
         </View>

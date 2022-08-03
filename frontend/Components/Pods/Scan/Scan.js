@@ -1,41 +1,28 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   Image,
   Dimensions,
-  AsyncStorage,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {ScanQRCode} from '../../../../assets/image';
 import {colors} from '../../shared/styles';
-import {H1, H2, H3, P1, P2} from '../../shared/Typography';
+import {H2, H3} from '../../shared/Typography';
 import {useMoralisDapp} from '../../../providers/MoralisDappProvider/MoralisDappProvider';
 
 const windowWidth = Dimensions.get('window').width;
 
-const Scan = () => {
-  const [name, setName] = useState();
-  const {walletAddress, chainId} = useMoralisDapp();
+const Scan = ({navigation}) => {
+  const {walletAddress, name} = useMoralisDapp();
 
-  const getMyName = async () => {
-    try {
-      const myName = await AsyncStorage.getItem('myName');
-      if (myName !== null) {
-        setName(myName);
-      } else {
-        console.log('nai milla');
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.log('error hai bhai', error);
-    }
+  const openScanner = () => {
+    navigation.navigate('ScanQR');
   };
-  useEffect(() => {
-    getMyName();
-  }, []);
+
   const QRdata = {name: name, walletAddress: walletAddress};
+  console.log(JSON.stringify(QRdata));
   return (
     <View style={styles.viewContainer}>
       <H2>CONNECT</H2>
@@ -57,6 +44,7 @@ const Scan = () => {
         OR
       </H3>
       <TouchableOpacity
+        onPress={openScanner}
         style={{
           width: 50,
           height: 50,

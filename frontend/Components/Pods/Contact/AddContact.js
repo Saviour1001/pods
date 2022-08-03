@@ -1,39 +1,24 @@
 import React, {useState} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  AsyncStorage,
-} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {ScanQRCode} from '../../../../assets/image';
+import {useMoralisDapp} from '../../../providers/MoralisDappProvider/MoralisDappProvider';
 import {colors} from '../../shared/styles';
 import {H3} from '../../shared/Typography';
 import GreenButton from '../Common/GreenButton';
 import HeaderWithBack from '../Common/HeaderWithBack';
 import InputField from '../Common/InputField';
 
-const AddContact = ({navigation: {goBack}}) => {
-  const [name, setName] = useState();
-  const [walletAddress, setWalletAddress] = useState();
+const AddContact = ({route, navigation}) => {
+  const {storeContacts} = useMoralisDapp();
+  const {contact} = route.params;
+  console.log('Contact from route -->', contact);
+  const {goBack} = navigation;
+  const [name, setName] = useState(contact?.name);
+  const [walletAddress, setWalletAddress] = useState(contact?.walletAddress);
 
   const handleSubmit = async () => {
-    try {
-      let input = [{name: name, walletAddress: walletAddress}];
-      const myContacts = await AsyncStorage.getItem('myContacts');
-      if (myContacts !== null) {
-        const temp = JSON.parse(myContacts);
-        temp.push({name: name, walletAddress: walletAddress});
-        await AsyncStorage.setItem('myContacts', JSON.stringify(temp));
-      } else {
-        await AsyncStorage.setItem('myContacts', JSON.stringify(input));
-        console.log('nai milla');
-      }
-      goBack();
-    } catch (error) {
-      // Error retrieving data
-      console.log('error hai bhai', error);
-    }
+    storeContacts({name, walletAddress});
+    navigation.navigate('Pods');
   };
 
   return (
@@ -44,6 +29,7 @@ const AddContact = ({navigation: {goBack}}) => {
         setvalue={setWalletAddress}
         LabelName="Wallet Address"
         placeholder="Enter wallet address or ENS"
+        textInputProps={{multiline: true}}
         containerStyle={styles.commonMarginTop}
       />
       <InputField

@@ -1,55 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   FlatList,
   Image,
   TouchableOpacity,
-  AsyncStorage,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 import {User} from '../../../../assets/image';
+import {useMoralisDapp} from '../../../providers/MoralisDappProvider/MoralisDappProvider';
 import Icon from '../../shared/Icon';
 import iconNames from '../../shared/iconNames';
 import {colors, globalStyles} from '../../shared/styles';
-import {H1, H2, H3, P1, P2} from '../../shared/Typography';
-import {contactData} from '../Common/Constant';
+import {H2, H3} from '../../shared/Typography';
 import FloatingAddButton from '../Common/FloatingAddButton';
 
 const Contact = ({navigation}) => {
-  const [contacts, setContacts] = useState();
+  const {name, contacts, getContacts} = useMoralisDapp();
   console.log(contacts);
-  const [name, setName] = useState();
-  const getMyName = async () => {
-    try {
-      const myName = await AsyncStorage.getItem('myName');
-      if (myName !== null) {
-        setName(myName);
-      } else {
-        console.log('nai milla');
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.log('error hai bhai', error);
-    }
-  };
-  const getMyContacts = async () => {
-    try {
-      const value = await AsyncStorage.getItem('myContacts');
-      if (value !== null) {
-        setContacts(JSON.parse(value));
-      } else {
-        console.log('nai milla');
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.log('error hai bhai', error);
-    }
-  };
+
   useEffect(() => {
-    getMyName();
-    getMyContacts();
+    getContacts();
   }, []);
   const Header = () => {
     return (
@@ -115,7 +85,13 @@ const Contact = ({navigation}) => {
         renderItem={SingleContact}
         keyExtractor={item => item.id}
       /> */}
-      <FloatingAddButton action={() => navigation.navigate('AddContact')} />
+      <FloatingAddButton
+        action={() =>
+          navigation.navigate('AddContact', {
+            contact: {name: '', walletAddress: ''},
+          })
+        }
+      />
     </View>
   );
 };
