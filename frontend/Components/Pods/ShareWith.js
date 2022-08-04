@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, FlatList, Dimensions, Image} from 'react-native';
 import HeaderWithBack from './Common/HeaderWithBack';
 import BottomButton from './Common/BottomButton';
@@ -16,8 +16,11 @@ const ShareWith = ({navigation}) => {
   const {goBack} = navigation;
 
   // Adding selected key to data
-  const {contacts} = useMoralisDapp();
-  const initData = contacts;
+  const {contacts, getContacts} = useMoralisDapp();
+  useEffect(() => {
+    getContacts();
+  }, []);
+  let initData = contacts;
   initData.map(i => {
     i.selected = false;
   });

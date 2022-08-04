@@ -15,8 +15,8 @@ import {
   useWeb3ExecuteFunction,
 } from 'react-moralis';
 
-const smartContractAddress = '0x68419ab556eE236FA40eda87DBfF71268019527D';
 import ABI from '../../../smartContract/ABIs/podsV1.json';
+const smartContractAddress = '0x68419ab556eE236FA40eda87DBfF71268019527D';
 
 const CreatePod = ({route, navigation}) => {
   const contractProcessor = useWeb3ExecuteFunction();
@@ -28,22 +28,7 @@ const CreatePod = ({route, navigation}) => {
   const [URIs, setURIs] = useState([]);
   const {Moralis, account} = useMoralis();
   const {goBack} = navigation;
-  const finalFunction = async () => {
-    console.log('Creating new pod');
-    let podMetadata = {
-      images: URIs,
-      title: title,
-      description: description,
-    };
-    const podMetadataFile = new Moralis.File('metadata.json', {
-      base64: btoa(JSON.stringify(podMetadata)),
-    });
-    console.log('podMetadataFile-->', podMetadataFile);
-    await podMetadataFile.saveIPFS();
-    const podMetadataFileHash = await podMetadataFile.ipfs();
-    console.log('podMetadataFileHash-->', podMetadataFileHash);
-    callingSmartContract(podMetadataFileHash);
-  };
+
   const handelFileInput = async () => {
     console.log('Please take input files');
     ImagePicker.openPicker({multiple: true, includeBase64: true}).then(
@@ -58,8 +43,27 @@ const CreatePod = ({route, navigation}) => {
   const handelShareWith = () => {
     navigation.navigate('ShareWith');
   };
-  const handleCreatePod = () => {
-    finalFunction();
+  const handleCreatePod = async () => {
+    console.log('Creating new pod');
+    let podMetadata = {
+      images: URIs,
+      title: title,
+      description: description,
+    };
+    const podMetadataFile = new Moralis.File('metadata.json', {
+      base64: btoa(JSON.stringify(podMetadata)),
+    });
+    console.log('podMetadataFile-->', podMetadataFile);
+    await podMetadataFile.saveIPFS();
+    const podMetadataFileHash = await podMetadataFile.ipfs();
+    console.log('podMetadataFileHash-->', podMetadataFileHash);
+    callingSmartContract({
+      contentURI: podMetadataFileHash,
+      podMates: shareWith,
+    });
+
+    // URIs after calling contract
+    setURIs([]);
   };
 
   async function uploadFile(file) {
@@ -83,7 +87,7 @@ const CreatePod = ({route, navigation}) => {
       </TouchableOpacity>
     );
   };
-  async function callingSmartContract(contentURI, podMates = []) {
+  async function callingSmartContract({contentURI, podMates}) {
     const options = {
       contractAddress: smartContractAddress,
       functionName: 'createPod',
@@ -104,11 +108,15 @@ const CreatePod = ({route, navigation}) => {
     <View style={{flex: 1, padding: 30}}>
       <HeaderWithBack title="CREATE POD" handleBack={() => goBack()} />
       <InputField
+        value={title}
+        setvalue={setTitle}
         LabelName="Name"
         placeholder="Name your pod"
         containerStyle={{marginTop: 15}}
       />
       <InputField
+        value={description}
+        setvalue={setDescription}
         LabelName="Description"
         placeholder="One line description"
         containerStyle={{marginTop: 15}}
