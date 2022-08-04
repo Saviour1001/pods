@@ -24,7 +24,7 @@ const CreatePod = ({route, navigation}) => {
   const [URIs, setURIs] = useState([]);
   const {Moralis, account} = useMoralis();
   const {goBack} = navigation;
-  const handelFileInput = () => {
+  const handelFileInput = async () => {
     console.log('Please take input files');
     ImagePicker.openPicker({multiple: true, includeBase64: true}).then(
       images => {
@@ -33,13 +33,8 @@ const CreatePod = ({route, navigation}) => {
         });
       },
     );
-  };
-
-  const handelShareWith = () => {
-    navigation.navigate('ShareWith');
-  };
-  const handelCreatePod = () => {
-    console.log('Create new pod');
+    
+    console.log('Creating new pod');
     let podMetadata = {
       images: URIs,
       title: title,
@@ -49,6 +44,14 @@ const CreatePod = ({route, navigation}) => {
       base64: btoa(JSON.stringify(podMetadata)),
     });
     console.log('podMetadataFile-->', podMetadataFile);
+    await podMetadataFile.saveIPFS();
+    const podMetadataFileHash = await podMetadataFile.ipfs();
+    console.log('podMetadataFileHash-->', podMetadataFileHash);
+    callingSmartContract(podMetadataFileHash);
+  };
+
+  const handelShareWith = () => {
+    navigation.navigate('ShareWith');
   };
 
   async function uploadFile(file) {
@@ -72,6 +75,22 @@ const CreatePod = ({route, navigation}) => {
       </TouchableOpacity>
     );
   };
+  async function callingSmartContract(contentURI, podMates = []) {
+    const options = {
+      contractAddress: smartContractAddress,
+      functionName: 'createPod',
+      abi: ABI,
+      params: {
+        _contentURI: contentURI,
+        _podMates: podMates,
+      },
+    };
+    await contractProcessor.fetch({
+      params: options,
+      onSuccess: () => message.success('NFT created successfully'),
+      onError: error => message.error(error),
+    });
+  }
 
   return (
     <View style={{flex: 1, padding: 30}}>
