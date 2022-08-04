@@ -8,14 +8,18 @@ import Icon from '../shared/Icon';
 import iconNames from '../shared/iconNames';
 import HeaderWithBack from './Common/HeaderWithBack';
 import BottomButton from './Common/BottomButton';
-
+import {encode as btoa} from 'base-64';
 import {
   useMoralisFile,
   useMoralis,
   useWeb3ExecuteFunction,
 } from 'react-moralis';
 
+const smartContractAddress = '0x9A0B2F1EbAE0217BeAACc09c2ACA0A96184d65CCs';
+import ABI from '../../../smartContract/ABIs/podsV1.json';
+
 const CreatePod = ({route, navigation}) => {
+  const contractProcessor = useWeb3ExecuteFunction();
   const {shareWith} = route.params;
   console.log('Share With-->', shareWith);
 
@@ -24,16 +28,7 @@ const CreatePod = ({route, navigation}) => {
   const [URIs, setURIs] = useState([]);
   const {Moralis, account} = useMoralis();
   const {goBack} = navigation;
-  const handelFileInput = async () => {
-    console.log('Please take input files');
-    ImagePicker.openPicker({multiple: true, includeBase64: true}).then(
-      images => {
-        images.map(image => {
-          uploadFile(image);
-        });
-      },
-    );
-    
+  const finalFunction = async () => {
     console.log('Creating new pod');
     let podMetadata = {
       images: URIs,
@@ -49,9 +44,22 @@ const CreatePod = ({route, navigation}) => {
     console.log('podMetadataFileHash-->', podMetadataFileHash);
     callingSmartContract(podMetadataFileHash);
   };
+  const handelFileInput = async () => {
+    console.log('Please take input files');
+    ImagePicker.openPicker({multiple: true, includeBase64: true}).then(
+      images => {
+        images.map(image => {
+          uploadFile(image);
+        });
+      },
+    );
+  };
 
   const handelShareWith = () => {
     navigation.navigate('ShareWith');
+  };
+  const handleCreatePod = () => {
+    finalFunction();
   };
 
   async function uploadFile(file) {
@@ -87,8 +95,8 @@ const CreatePod = ({route, navigation}) => {
     };
     await contractProcessor.fetch({
       params: options,
-      onSuccess: () => message.success('NFT created successfully'),
-      onError: error => message.error(error),
+      onSuccess: () => console.log('NFT created successfully'),
+      onError: error => console.log(error),
     });
   }
 
@@ -108,7 +116,7 @@ const CreatePod = ({route, navigation}) => {
       <Input label="Share with" action={handelShareWith} />
 
       <Input label="Files" action={handelFileInput} />
-      <BottomButton label="CREATE" action={handelCreatePod} />
+      <BottomButton label="CREATE" action={handleCreatePod} />
     </View>
   );
 };

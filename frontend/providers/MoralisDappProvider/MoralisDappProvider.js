@@ -88,7 +88,7 @@ function MoralisDappProvider({children}) {
 
   const value = {
     walletAddress,
-    chainId: '0x1',
+    chainId: '0x13881',
     name,
     setName,
     getName,
