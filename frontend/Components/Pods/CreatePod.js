@@ -32,12 +32,23 @@ const CreatePod = ({route, navigation}) => {
       },
     );
   };
+  const podMetadata = {
+    images: [],
+    title: '',
+    description: '',
+    
+  }
+  const podMetadataFile = new Moralis.File("metadata.json", {
+      base64: btoa(JSON.stringify(podMetadata)),
+    });
   const handelShareWith = () => {
     navigation.navigate('ShareWith');
   };
   const handelCreatePod = () => {
     console.log('Create new pod');
   };
+
+  async function callingSmartContract()
 
   async function uploadFile(file) {
     const metadataFile = new Moralis.File('image.jpg', {
