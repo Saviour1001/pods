@@ -89,7 +89,7 @@ const CreatePod = ({route, navigation}) => {
       functionName: 'createPod',
       abi: ABI,
       params: {
-        _contentURI: contentURI,
+        _contentUri: contentURI,
         _podMates: podMates,
       },
     };
