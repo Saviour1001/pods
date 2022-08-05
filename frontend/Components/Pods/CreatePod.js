@@ -13,6 +13,7 @@ import {
   useMoralisFile,
   useMoralis,
   useWeb3ExecuteFunction,
+  useMoralisQuery
 } from 'react-moralis';
 
 import ABI from '../../../smartContract/ABIs/podsV1.json';
@@ -28,6 +29,33 @@ const CreatePod = ({route, navigation}) => {
   const [URIs, setURIs] = useState([]);
   const {Moralis, account} = useMoralis();
   const {goBack} = navigation;
+
+  // fetching data from the query 
+  const { data } = useMoralisQuery("TABLE_NAME_HERE", (query) =>
+    query.equalTo("COLUMN_NAME_HERE", contentId)
+  );
+  useEffect(() => {
+    function extractUri(data) {
+      const fetchedContent = JSON.parse(JSON.stringify(data, ["contentUri"]));
+      const contentUri = fetchedContent[0]["contentUri"];
+      return contentUri;
+    }
+    async function fetchIPFSDoc(ipfsHash) {
+      console.log(ipfsHash);
+      const url = ipfsHash;
+      const response = await fetch(url);
+      return await response.json();
+    }
+    async function processContent() {
+      const content = await fetchIPFSDoc(extractUri(data));
+      console.log(content)
+    }
+    if (data.length > 0) {
+      processContent();
+    }
+  }, [data]);
+
+  ///////////////////////////////////////
 
   const handelFileInput = async () => {
     console.log('Please take input files');
@@ -76,6 +104,8 @@ const CreatePod = ({route, navigation}) => {
     URIs.push(metadataHash);
     console.log('URIs-->', URIs);
   }
+
+
 
   const Input = ({label, action}) => {
     return (
