@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-// deployed on BSC testnet: 0x1977b8F6c789CbC7AF2bd066842F0fC47Fa583d3
-// deployed on Polygon Testnet: 0x68419ab556eE236FA40eda87DBfF71268019527D
+// deployed on Polygon Testnet: 0xF0AAdc224E41388230813172f1E18fdD95C7CF8E
 pragma solidity ^0.8.7;
 
 contract PODS {
@@ -8,7 +7,8 @@ contract PODS {
         bytes32 indexed podId,
         address indexed podOwner,
         address[] podMates,
-        bytes32 contentId
+        bytes32 contentId,
+        string contentUri
     );
 
     struct Pod {
@@ -32,6 +32,6 @@ contract PODS {
         podRegistry[_podID].owner = _owner;
         podRegistry[_podID].contentId = _contentId;
         podRegistry[_podID].podMates = _podMates;
-        emit PodCreated(_podID, _owner, _podMates, _contentId);
+        emit PodCreated(_podID, _owner, _podMates, _contentId, _contentUri);
     }
 }

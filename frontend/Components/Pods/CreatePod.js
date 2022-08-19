@@ -17,7 +17,7 @@ import {
 } from 'react-moralis';
 
 import ABI from '../../../smartContract/ABIs/podsV1.json';
-const smartContractAddress = '0x68419ab556eE236FA40eda87DBfF71268019527D';
+const smartContractAddress = '0xF0AAdc224E41388230813172f1E18fdD95C7CF8E';
 
 const CreatePod = ({route, navigation}) => {
   const contractProcessor = useWeb3ExecuteFunction();
