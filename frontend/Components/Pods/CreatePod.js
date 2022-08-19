@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TextInput, TouchableOpacity} from 'react-native';
 import {H2, H3, styles} from '../shared/Typography';
 import {colors, fontFamilies, globalStyles} from '../shared/styles';
@@ -13,7 +13,7 @@ import {
   useMoralisFile,
   useMoralis,
   useWeb3ExecuteFunction,
-  useMoralisQuery
+  useMoralisQuery,
 } from 'react-moralis';
 
 import ABI from '../../../smartContract/ABIs/podsV1.json';
@@ -30,30 +30,29 @@ const CreatePod = ({route, navigation}) => {
   const {Moralis, account} = useMoralis();
   const {goBack} = navigation;
 
-  // fetching data from the query 
-  const { data } = useMoralisQuery("TABLE_NAME_HERE", (query) =>
-    query.equalTo("COLUMN_NAME_HERE", contentId)
-  );
-  useEffect(() => {
-    function extractUri(data) {
-      const fetchedContent = JSON.parse(JSON.stringify(data, ["contentUri"]));
-      const contentUri = fetchedContent[0]["contentUri"];
-      return contentUri;
-    }
-    async function fetchIPFSDoc(ipfsHash) {
-      console.log(ipfsHash);
-      const url = ipfsHash;
-      const response = await fetch(url);
-      return await response.json();
-    }
-    async function processContent() {
-      const content = await fetchIPFSDoc(extractUri(data));
-      console.log(content)
-    }
-    if (data.length > 0) {
-      processContent();
-    }
-  }, [data]);
+  // fetching data from the query
+  const {data} = useMoralisQuery('AllPods');
+
+  // useEffect(() => {
+  //   function extractUri(data) {
+  //     const fetchedContent = JSON.parse(JSON.stringify(data, ['contentUri']));
+  //     const contentUri = fetchedContent[0]['contentUri'];
+  //     return contentUri;
+  //   }
+  //   async function fetchIPFSDoc(ipfsHash) {
+  //     console.log(ipfsHash);
+  //     const url = ipfsHash;
+  //     const response = await fetch(url);
+  //     return await response.json();
+  //   }
+  //   async function processContent() {
+  //     const content = await fetchIPFSDoc(extractUri(data));
+  //     console.log('CONTENT', content);
+  //   }
+  //   if (data.length > 0) {
+  //     processContent();
+  //   }
+  // }, [data]);
 
   ///////////////////////////////////////
 
@@ -94,6 +93,10 @@ const CreatePod = ({route, navigation}) => {
     setURIs([]);
   };
 
+  const handleTest = () => {
+    console.log(data);
+  };
+
   async function uploadFile(file) {
     const metadataFile = new Moralis.File('image.jpg', {
       base64: file.data,
@@ -104,8 +107,6 @@ const CreatePod = ({route, navigation}) => {
     URIs.push(metadataHash);
     console.log('URIs-->', URIs);
   }
-
-
 
   const Input = ({label, action}) => {
     return (
@@ -154,7 +155,7 @@ const CreatePod = ({route, navigation}) => {
       <Input label="Share with" action={handelShareWith} />
 
       <Input label="Files" action={handelFileInput} />
-      <BottomButton label="CREATE" action={handleCreatePod} />
+      <BottomButton label="CREATE" action={handleTest} />
     </View>
   );
 };
