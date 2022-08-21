@@ -43,7 +43,7 @@ const Pods = ({navigation}) => {
   } = useMoralisDapp();
   const [newName, setNewName] = useState(name);
   const {data: tempSharedPods} = useMoralisQuery('PodsCreated', query =>
-    query.contains('podMates', '0x4aB65FEb7Dc1644Cabe45e00e918815D3acbFa0a'),
+    query.contains('podMates', walletAddress),
   );
   const {data: tempMyPods} = useMoralisQuery('PodsCreated', query =>
     query.equalTo('podOwner', walletAddress),
