@@ -17,12 +17,12 @@ import {
 } from 'react-moralis';
 
 import ABI from '../../../smartContract/ABIs/podsV1.json';
+import {getSharedPods} from './helpers/queryPods';
 const smartContractAddress = '0xF0AAdc224E41388230813172f1E18fdD95C7CF8E';
 
 const CreatePod = ({route, navigation}) => {
   const contractProcessor = useWeb3ExecuteFunction();
   const {shareWith} = route.params;
-  console.log('Share With-->', shareWith);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -30,34 +30,7 @@ const CreatePod = ({route, navigation}) => {
   const {Moralis, account} = useMoralis();
   const {goBack} = navigation;
 
-  // fetching data from the query
-  const {data} = useMoralisQuery('AllPods');
-
-  // useEffect(() => {
-  //   function extractUri(data) {
-  //     const fetchedContent = JSON.parse(JSON.stringify(data, ['contentUri']));
-  //     const contentUri = fetchedContent[0]['contentUri'];
-  //     return contentUri;
-  //   }
-  //   async function fetchIPFSDoc(ipfsHash) {
-  //     console.log(ipfsHash);
-  //     const url = ipfsHash;
-  //     const response = await fetch(url);
-  //     return await response.json();
-  //   }
-  //   async function processContent() {
-  //     const content = await fetchIPFSDoc(extractUri(data));
-  //     console.log('CONTENT', content);
-  //   }
-  //   if (data.length > 0) {
-  //     processContent();
-  //   }
-  // }, [data]);
-
-  ///////////////////////////////////////
-
   const handelFileInput = async () => {
-    console.log('Please take input files');
     ImagePicker.openPicker({multiple: true, includeBase64: true}).then(
       images => {
         images.map(image => {
@@ -71,7 +44,6 @@ const CreatePod = ({route, navigation}) => {
     navigation.navigate('ShareWith');
   };
   const handleCreatePod = async () => {
-    console.log('Creating new pod');
     let podMetadata = {
       images: URIs,
       title: title,
@@ -80,10 +52,8 @@ const CreatePod = ({route, navigation}) => {
     const podMetadataFile = new Moralis.File('metadata.json', {
       base64: btoa(JSON.stringify(podMetadata)),
     });
-    console.log('podMetadataFile-->', podMetadataFile);
     await podMetadataFile.saveIPFS();
     const podMetadataFileHash = await podMetadataFile.ipfs();
-    console.log('podMetadataFileHash-->', podMetadataFileHash);
     callingSmartContract({
       contentURI: podMetadataFileHash,
       podMates: shareWith,
@@ -91,10 +61,6 @@ const CreatePod = ({route, navigation}) => {
 
     // URIs after calling contract
     setURIs([]);
-  };
-
-  const handleTest = () => {
-    console.log(data);
   };
 
   async function uploadFile(file) {
@@ -105,7 +71,6 @@ const CreatePod = ({route, navigation}) => {
     await metadataFile.saveIPFS();
     const metadataHash = await metadataFile.ipfs();
     URIs.push(metadataHash);
-    console.log('URIs-->', URIs);
   }
 
   const Input = ({label, action}) => {
@@ -155,7 +120,7 @@ const CreatePod = ({route, navigation}) => {
       <Input label="Share with" action={handelShareWith} />
 
       <Input label="Files" action={handelFileInput} />
-      <BottomButton label="CREATE" action={handleTest} />
+      <BottomButton label="CREATE" action={handleCreatePod} />
     </View>
   );
 };

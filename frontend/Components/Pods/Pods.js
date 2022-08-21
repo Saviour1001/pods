@@ -7,7 +7,8 @@ import {
   ScrollView,
   Dimensions,
   Modal,
-  AsyncStorage,
+  Image,
+  FlatList,
 } from 'react-native';
 import {H1, H2, H3, P1, P2} from '../shared/Typography';
 import {colors, globalStyles} from '../shared/styles';
@@ -15,6 +16,14 @@ import FloatingAddButton from './Common/FloatingAddButton';
 import InputField from './Common/InputField';
 import GreenButton from './Common/GreenButton';
 import {useMoralisDapp} from '../../providers/MoralisDappProvider/MoralisDappProvider';
+import {
+  getContent,
+  getMyPods,
+  getOwner,
+  getSharedPods,
+} from './helpers/queryPods';
+import {useMoralisQuery} from 'react-moralis';
+import {Folder} from '../../../assets/image';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -22,9 +31,23 @@ const windowHeight = Dimensions.get('window').height;
 const Pods = ({navigation}) => {
   const [activeTab, setactiveTab] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const {name, getName, storeName} = useMoralisDapp();
+  const {
+    name,
+    getName,
+    storeName,
+    walletAddress,
+    setSharedPods,
+    setMyPods,
+    sharedPods,
+    myPods,
+  } = useMoralisDapp();
   const [newName, setNewName] = useState(name);
-  console.log('name-->', newName);
+  const {data: tempSharedPods} = useMoralisQuery('PodsCreated', query =>
+    query.contains('podMates', '0x4aB65FEb7Dc1644Cabe45e00e918815D3acbFa0a'),
+  );
+  const {data: tempMyPods} = useMoralisQuery('PodsCreated', query =>
+    query.equalTo('podOwner', walletAddress),
+  );
   const onPressZero = () => {
     setactiveTab(0);
   };
@@ -32,14 +55,11 @@ const Pods = ({navigation}) => {
     setactiveTab(1);
   };
   const handleAdd = () => {
-    console.log('Create New Pod');
     navigation.navigate('CreatePod', {shareWith: []});
   };
-
   const handleSudmit = () => {
     storeName({name: newName});
   };
-
   useEffect(() => {
     getName();
   }, []);
@@ -50,6 +70,12 @@ const Pods = ({navigation}) => {
       setModalVisible(false);
     }
   }, [name]);
+  useEffect(() => {
+    getSharedPods(tempSharedPods, setSharedPods);
+  }, [tempSharedPods]);
+  useEffect(() => {
+    getMyPods(tempMyPods, setMyPods);
+  }, [tempMyPods]);
 
   const TabBar = () => {
     return (
@@ -67,16 +93,29 @@ const Pods = ({navigation}) => {
       </View>
     );
   };
-  const PodCard = () => {
+  const PodCard = ({data}) => {
+    let podDetails = {
+      owner: getOwner({address: data.podOwner, myAddress: walletAddress}),
+      title: data.title,
+      description: data.description,
+      members: data.podMates,
+      images: data.images,
+      date: data.createdAt,
+    };
+    const handleCardClick = () => {
+      navigation.navigate('PodDetailed', {podDetails});
+    };
     return (
-      <View style={styles.podCard}>
-        <View style={styles.podImage}></View>
-        <View>
-          <H2>Lorem Ipsum</H2>
-          <P1>By: Manan Kevadiya</P1>
-          <P2>harsh, Ketasvi +4 more</P2>
+      <TouchableOpacity style={styles.podCard} onPress={handleCardClick}>
+        <View style={styles.podImage}>
+          <Image style={{width: 30, height: 30}} source={Folder} />
         </View>
-      </View>
+        <View>
+          <H2>{podDetails.title}</H2>
+          <P1>By: {podDetails.owner}</P1>
+          {/* <P2>harsh, Ketasvi +4 more</P2> */}
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -139,21 +178,29 @@ const Pods = ({navigation}) => {
           <TabBar />
           {activeTab === 1 ? (
             <View style={{width: '100%'}}>
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
-              <PodCard />
+              <FlatList
+                nestedScrollEnabled
+                extraData={sharedPods}
+                data={sharedPods}
+                onEndReachedThreshold={0.5}
+                initialNumToRender={6}
+                keyExtractor={item => item.objectId}
+                renderItem={({item}) => <PodCard data={item} />}
+              />
             </View>
-          ) : null}
+          ) : (
+            <View style={{width: '100%'}}>
+              <FlatList
+                nestedScrollEnabled
+                extraData={myPods}
+                data={myPods}
+                onEndReachedThreshold={0.5}
+                initialNumToRender={6}
+                keyExtractor={item => item.objectId}
+                renderItem={({item}) => <PodCard data={item} />}
+              />
+            </View>
+          )}
         </View>
       </ScrollView>
       <FloatingAddButton action={handleAdd} />
@@ -208,6 +255,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     marginRight: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

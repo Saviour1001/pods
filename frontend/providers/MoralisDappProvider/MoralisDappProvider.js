@@ -10,6 +10,8 @@ function MoralisDappProvider({children}) {
 
   const [name, setName] = useState(null);
   const [contacts, setContacts] = useState([]);
+  const [sharedPods, setSharedPods] = useState([]);
+  const [myPods, setMyPods] = useState([]);
   const getName = async () => {
     try {
       const value = await AsyncStorage.getItem('myName');
@@ -97,6 +99,10 @@ function MoralisDappProvider({children}) {
     setContacts,
     getContacts,
     storeContacts,
+    sharedPods,
+    setSharedPods,
+    myPods,
+    setMyPods,
   };
 
   return (
