@@ -2,7 +2,7 @@
 
 Built on top of [React Native Boilerplate](https://github.com/ethereum-boilerplate/ethereum-react-native-boilerplate) 
 
-Download [APK](https://ipfs.moralis.io:2053/ipfs/QmNfRMQZgNHHcJAD3tWWzoTm1EzAbVonYHJg4w21Uo1PmK)
+Download [APK](https://ipfs.moralis.io:2053/ipfs/QmeZbtVw4sMeWv6jiYrumXv4NxNUgpb8CikkX7nHeJE7Y7)
 
 Pods is a mobile app to share images,videos and other heavy files with your friends over a decentralized network. We are using a Polygon Smart contract to make sure about the logic and IPFS as the storage protocol. 
 
