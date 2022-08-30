@@ -12,10 +12,32 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {colors} from '../shared/styles';
 import {H2, H3} from '../shared/Typography';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faCamera, faImages} from '@fortawesome/free-solid-svg-icons';
+import {faCamera, faImages, faUpload} from '@fortawesome/free-solid-svg-icons';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {
+  useMoralisFile,
+  useMoralis,
+  useWeb3ExecuteFunction,
+  useMoralisQuery,
+} from 'react-moralis';
 const includeExtra = true;
+
 const Camera = () => {
+  const {Moralis, account} = useMoralis();
+
+  async function uploadFile(file) {
+    console.log(typeof(file));
+    // var jezzon = JSON.parse(file);
+    console.log('Uppppppploading to Hadron Collider server!!!');
+    const metadataFile = new Moralis.File('Diablo.jpg', {
+      base64: file.assets[0].base64,
+    });
+
+    await metadataFile.saveIPFS();
+    const metadataHash = await metadataFile.ipfs();
+    console.log(metadataHash);
+  }
+
   const [response, setResponse] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [whichCamera, setWhichCamera] = useState('back');
@@ -95,22 +117,11 @@ const Camera = () => {
               saveToPhotos: true,
               mediaType: 'photo',
               cameraType: whichCamera,
-              includeBase64: false,
+              includeBase64: true,
               includeExtra,
             })
           }
-          style={{
-            width: 50,
-            height: 50,
-            backgroundColor: colors.primary,
-            borderRadius: 25,
-            borderWidth: 1,
-            borderBottomWidth: 3,
-            borderRightWidth: 3,
-            alignItems: 'center',
-            justifyContent: 'center',
-            alignSelf: 'center',
-          }}>
+          style={styles.button}>
           <FontAwesomeIcon icon={faCamera} size={30} color={colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -118,23 +129,17 @@ const Camera = () => {
             onButtonPress('selector', {
               saveToPhotos: true,
               mediaType: 'photo',
-              includeBase64: false,
+              includeBase64: true,
               includeExtra,
             })
           }
-          style={{
-            width: 50,
-            height: 50,
-            backgroundColor: colors.primary,
-            borderRadius: 25,
-            borderWidth: 1,
-            borderBottomWidth: 3,
-            borderRightWidth: 3,
-            alignItems: 'center',
-            justifyContent: 'center',
-            alignSelf: 'center',
-          }}>
+          style={styles.button}>
           <FontAwesomeIcon icon={faImages} size={30} color={colors.white} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => uploadFile(response)}
+          style={styles.button}>
+          <FontAwesomeIcon icon={faUpload} size={30} color={colors.white} />
         </TouchableOpacity>
         {/* ); */}
         {/* })} */}
@@ -159,8 +164,8 @@ const Camera = () => {
           contentContainerStyle={{
             alignItems: 'flex-start',
           }}
-        //   extraData={images}
-        //   data={images}
+          //   extraData={images}
+          //   data={images}
           keyExtractor={item => item}
           renderItem={({item}) => <ImageGallery imageUrl={item} />}
         />
@@ -223,6 +228,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.5,
     borderRightWidth: 3,
     borderWidth: 0.5,
+  },
+  button: {
+    width: 50,
+    height: 50,
+    backgroundColor: colors.primary,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 });
 
