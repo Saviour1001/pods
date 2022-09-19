@@ -13,6 +13,7 @@ import {
   Animated,
   Dimensions,
   ImageBackground,
+  Appearance
 } from 'react-native';
 import {
   Button,
@@ -30,7 +31,8 @@ import {
 } from 'react-moralis';
 import {useWalletConnect} from '../WalletConnect';
 import LottieView from 'lottie-react-native';
-
+import bgLite from './../../assets/image/BG-lite.png';
+import bgDark from './../../assets/image/BG-dark.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animation from '../splashLottie.json';
 import {colors} from './shared/styles';
@@ -40,7 +42,7 @@ import LinearGradient from 'react-native-linear-gradient';
 // import Loader from './Components/Loader';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+const colorScheme = Appearance.getColorScheme();
 const Auth = ({navigation}) => {
   const connector = useWalletConnect();
   const {
@@ -57,7 +59,6 @@ const Auth = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
   const [visible, setVisible] = React.useState(false);
-
   const showDialog = () => setVisible(true);
 
   const hideDialog = () => setVisible(false);
@@ -94,8 +95,7 @@ const Auth = ({navigation}) => {
             alignContent: 'center',
           }}>
           <View style={{flex: 1}}>
-            <LinearGradient
-              colors={['rgba(206, 255, 103, 0.3)', 'rgba(147, 130, 252, 0.3)']}>
+            <ImageBackground source={colorScheme==='dark' ? bgDark: bgLite} style={styles.image} resizeMode="cover">
               <KeyboardAvoidingView enabled>
                 <View>
                   {authError && (
@@ -132,7 +132,7 @@ const Auth = ({navigation}) => {
                 What are wallets?
             </Text> */}
               </KeyboardAvoidingView>
-            </LinearGradient>
+            </ImageBackground>
           </View>
         </ScrollView>
       </View>
@@ -145,8 +145,11 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'white',
     alignContent: 'center',
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center"
   },
   SectionStyle: {
     flexDirection: 'row',

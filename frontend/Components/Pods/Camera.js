@@ -6,6 +6,8 @@ import {
   Image,
   ScrollView,
   FlatList,
+  Linking,
+  Dimensions,
 } from 'react-native';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -23,6 +25,7 @@ import {
 import mintingNFTContractABI from "../../../smartContract/ABIs/minter.json";
 const includeExtra = true;
 
+const windowWidth = Dimensions.get('window').width;
 const mintingNFTContractAddress = "0x74Fd20EA4C0D0250dCA622df7638aFde0Cb96463";
 
 
@@ -31,7 +34,7 @@ const Camera = () => {
   const contractProcessor = useWeb3ExecuteFunction();
 
   async function uploadFile(file) {
-    console.log(typeof(file));
+    console.log(typeof file);
     // var jezzon = JSON.parse(file);
     console.log('Uppppppploading to Hadron Collider server!!!');
     const metadataFile = new Moralis.File('Diablo.jpg', {
@@ -41,7 +44,8 @@ const Camera = () => {
     await metadataFile.saveIPFS();
     const metadataHash = await metadataFile.ipfs();
     console.log(metadataHash);
-
+    setImages([...images, metadataHash]);
+    console.log('$$$', images);
     callingSmartContract(metadataHash);
 
   }
@@ -63,16 +67,7 @@ const Camera = () => {
   }
 
   const [response, setResponse] = useState(null);
-  const [activeTab, setActiveTab] = useState(0);
-  const [whichCamera, setWhichCamera] = useState('back');
-  const onPressZero = () => {
-    setActiveTab(0);
-    setWhichCamera('back');
-  };
-  const onPressOne = () => {
-    setActiveTab(1);
-    setWhichCamera('front');
-  };
+  const [images, setImages] = useState([]);
   //   const actions = [
   //     {
   //       title: 'Take Image',
@@ -131,67 +126,55 @@ const Camera = () => {
   }, []);
   return (
     <View style={styles.viewContainer}>
-      <H2>TO THE MOON</H2>
-      {/* {actions.map(({title, type, options}) => {
-        return ( */}
-      <View style={styles.moonContainer}>
-        <TouchableOpacity
-          onPress={() =>
-            onButtonPress('capture', {
-              saveToPhotos: true,
-              mediaType: 'photo',
-              cameraType: whichCamera,
-              includeBase64: true,
-              includeExtra,
-            })
-          }
-          style={styles.button}>
-          <FontAwesomeIcon icon={faCamera} size={30} color={colors.white} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            onButtonPress('selector', {
-              saveToPhotos: true,
-              mediaType: 'photo',
-              includeBase64: true,
-              includeExtra,
-            })
-          }
-          style={styles.button}>
-          <FontAwesomeIcon icon={faImages} size={30} color={colors.white} />
-        </TouchableOpacity>
+      <View style={styles.colContainer}>
+        <H2>INSTANT NFT MINTER</H2>
+        <View style={styles.moonContainer}>
+          <TouchableOpacity
+            onPress={() =>
+              onButtonPress('capture', {
+                saveToPhotos: true,
+                mediaType: 'photo',
+                includeBase64: true,
+                includeExtra,
+              })
+            }
+            style={styles.button}>
+            <FontAwesomeIcon icon={faCamera} size={30} color={colors.white} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              onButtonPress('selector', {
+                saveToPhotos: true,
+                mediaType: 'photo',
+                includeBase64: true,
+                includeExtra,
+              })
+            }
+            style={styles.button}>
+            <FontAwesomeIcon icon={faImages} size={30} color={colors.white} />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           onPress={() => uploadFile(response)}
-          style={styles.button}>
-          <FontAwesomeIcon icon={faUpload} size={30} color={colors.white} />
-        </TouchableOpacity>
-        {/* ); */}
-        {/* })} */}
-      </View>
-      <View style={styles.tabBar}>
-        <TouchableOpacity
-          onPress={onPressZero}
-          style={[styles.tab, activeTab === 0 ? styles.activetab : null]}>
-          <H3>Front Camera</H3>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={onPressOne}
-          style={[styles.tab, activeTab === 1 ? styles.activetab : null]}>
-          <H3>Back Camera</H3>
+          style={styles.buttonStyle}>
+          {/* <FontAwesomeIcon icon={faUpload} size={30} color='white' /> */}
+          <H3>Mint Image as NFT</H3>
         </TouchableOpacity>
       </View>
-      <View style={{width: '100%', marginTop: 20}}>
+      <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
         <FlatList
           key="_"
           numColumns={3}
-          style={{flexWrap: 'wrap', flexDirection: 'column'}}
+          style={{flexWrap: 'wrap', flexDirection: 'row'}}
           contentContainerStyle={{
             alignItems: 'flex-start',
+            justifyContent: 'space-evenly',
           }}
-          //   extraData={images}
-          //   data={images}
+          extraData={images}
+          data={images}
           keyExtractor={item => item}
           renderItem={({item}) => <ImageGallery imageUrl={item} />}
+          
         />
       </View>
     </View>
@@ -207,7 +190,7 @@ const ImageGallery = ({imageUrl}) => {
         style={{
           borderColor: 'black',
           borderWidth: 1,
-          width: windowWidth * 0.3,
+          width: windowWidth * 0.33,
           height: 120,
         }}
       />
@@ -217,41 +200,25 @@ const ImageGallery = ({imageUrl}) => {
 
 const styles = StyleSheet.create({
   viewContainer: {
-    backgroundColor: colors.primaryLight,
-    padding: 30,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+  },
+  colContainer: {
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    flexDirection: 'column',
+    backgroundColor: colors.primaryLight,
+    padding: 20,
   },
   moonContainer: {
-    padding: 60,
+    padding: 10,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     height: '30%',
     width: '100%',
-  },
-  tabBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 20,
-    borderColor: colors.black,
-    borderWidth: 1,
-    width: '100%',
-  },
-  tab: {
-    width: '100%',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-  },
-  activetab: {
-    backgroundColor: colors.primary,
-    borderColor: colors.black,
-    borderBottomWidth: 2.5,
-    borderRightWidth: 3,
-    borderWidth: 0.5,
   },
   button: {
     width: 50,
@@ -263,7 +230,21 @@ const styles = StyleSheet.create({
     borderRightWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    alignSelf: 'center',
+  },
+  buttonStyle: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+    color: '#fff',
+    borderColor: colors.black,
+    width: '80%',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    borderRadius: 20,
+    paddingHorizontal: 20,
   },
 });
 
