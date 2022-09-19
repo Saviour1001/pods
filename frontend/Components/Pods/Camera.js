@@ -22,11 +22,16 @@ import {
   useWeb3ExecuteFunction,
   useMoralisQuery,
 } from 'react-moralis';
+import mintingNFTContractABI from "../../../smartContract/ABIs/minter.json";
 const includeExtra = true;
 
 const windowWidth = Dimensions.get('window').width;
+const mintingNFTContractAddress = "0x74Fd20EA4C0D0250dCA622df7638aFde0Cb96463";
+
+
 const Camera = () => {
   const {Moralis, account} = useMoralis();
+  const contractProcessor = useWeb3ExecuteFunction();
 
   async function uploadFile(file) {
     console.log(typeof file);
@@ -41,6 +46,24 @@ const Camera = () => {
     console.log(metadataHash);
     setImages([...images, metadataHash]);
     console.log('$$$', images);
+    callingSmartContract(metadataHash);
+
+  }
+
+  async function callingSmartContract(metadataHash){
+    const options = {
+      contractAddress: mintingNFTContractAddress,
+      abi: mintingNFTContractABI,
+      functionName: "createToken",
+      params:{
+        tokenURI: metadataHash,
+      }
+    }
+    await contractProcessor.fetch({
+      params: options,
+      onSuccess: () => console.log('NFT created successfully'),
+      onError: error => console.log(error),
+    })
   }
 
   const [response, setResponse] = useState(null);
