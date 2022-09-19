@@ -4,7 +4,7 @@ import Pods from './Pods';
 import Scan from './Scan/Scan.js';
 import Camera from './Camera.js';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-
+import {Appearance} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
   faCreditCard,
@@ -17,20 +17,20 @@ import {
   faCamera,
 } from '@fortawesome/free-solid-svg-icons';
 import {colors} from '../shared/styles';
-
+const colorScheme = Appearance.getColorScheme();
 const Tab = createMaterialBottomTabNavigator();
 
 export default function PodsNav() {
   return (
     <Tab.Navigator
       shifting={false}
-      activeColor={colors.black}
-      // inactiveColor="#3e2465"
-      barStyle={{backgroundColor: 'white'}}>
+      activeColor={colorScheme === 'dark' ? colors.primary: colors.black}
+      inactiveColor={colorScheme === 'dark' ? "#3e2465": colors.gray}
+      barStyle={{backgroundColor: colorScheme === 'dark' ? 'black' : 'white'}}>
       <Tab.Screen
         name="Home"
         options={{
-          tabBarLabel: null,
+          tabBarLabel: 'Home',
           tabBarIcon: ({color, focused}) => {
             return <FontAwesomeIcon icon={faHome} color={color} size={20} />;
           },
@@ -40,7 +40,7 @@ export default function PodsNav() {
       <Tab.Screen
         name="Contact"
         options={{
-          tabBarLabel: null,
+          tabBarLabel: "Contact",
           tabBarIcon: ({color}) => (
             <FontAwesomeIcon icon={faUser} color={color} size={20} />
           ),
@@ -50,7 +50,7 @@ export default function PodsNav() {
       <Tab.Screen
         name="Scan"
         options={{
-          tabBarLabel: null,
+          tabBarLabel: "Scan",
           tabBarIcon: ({color, focused}) => {
             return <FontAwesomeIcon icon={faQrcode} color={color} size={20} />;
           },
@@ -60,7 +60,7 @@ export default function PodsNav() {
       <Tab.Screen
         name="Camera"
         options={{
-          tabBarLabel: null,
+          tabBarLabel: "Camera",
           tabBarIcon: ({color, focused}) => {
             return <FontAwesomeIcon icon={faCamera} color={color} size={20} />;
           },

@@ -119,15 +119,16 @@ const Camera = () => {
   //   ];
   const onButtonPress = React.useCallback((type, options) => {
     if (type === 'capture') {
-      launchCamera(options, setResponse);
+      launchCamera(options, setResponse).then(response => {uploadFile(response)});
     } else {
-      launchImageLibrary(options, setResponse);
+      launchImageLibrary(options, setResponse).then(response => {uploadFile(response)});
     }
   }, []);
   return (
     <View style={styles.viewContainer}>
       <View style={styles.colContainer}>
         <H2>INSTANT NFT MINTER</H2>
+        <View style={{height: 5}}></View>
         <View style={styles.moonContainer}>
           <TouchableOpacity
             onPress={() =>
@@ -154,12 +155,11 @@ const Camera = () => {
             <FontAwesomeIcon icon={faImages} size={30} color={colors.white} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => uploadFile(response)}
           style={styles.buttonStyle}>
-          {/* <FontAwesomeIcon icon={faUpload} size={30} color='white' /> */}
           <H3>Mint Image as NFT</H3>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
         <FlatList
@@ -205,7 +205,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   colContainer: {
-    backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'space-evenly',
     flexDirection: 'column',
