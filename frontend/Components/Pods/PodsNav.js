@@ -2,6 +2,7 @@ import React from 'react';
 import Contact from './Contact/Contact';
 import Pods from './Pods';
 import Scan from './Scan/Scan.js';
+import Camera from './Camera.js';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -13,6 +14,7 @@ import {
   faRocket,
   faHome,
   faQrcode,
+  faCamera,
 } from '@fortawesome/free-solid-svg-icons';
 import {colors} from '../shared/styles';
 
@@ -54,6 +56,16 @@ export default function PodsNav() {
           },
         }}
         component={Scan}
+      />
+      <Tab.Screen
+        name="Camera"
+        options={{
+          tabBarLabel: null,
+          tabBarIcon: ({color, focused}) => {
+            return <FontAwesomeIcon icon={faCamera} color={color} size={20} />;
+          },
+        }}
+        component={Camera}
       />
     </Tab.Navigator>
   );
