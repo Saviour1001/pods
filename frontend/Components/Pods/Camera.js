@@ -32,20 +32,34 @@ const mintingNFTContractAddress = "0x74Fd20EA4C0D0250dCA622df7638aFde0Cb96463";
 const Camera = () => {
   const {Moralis, account} = useMoralis();
   const contractProcessor = useWeb3ExecuteFunction();
+  const [nftName, setNftName] = useState('Something');
+  const [nftDescription, setNftDescription] = useState('something');
 
   async function uploadFile(file) {
     console.log(typeof file);
     // var jezzon = JSON.parse(file);
     console.log('Uppppppploading to Hadron Collider server!!!');
-    const metadataFile = new Moralis.File('Diablo.jpg', {
+    const imageFile = new Moralis.File('Diablo.jpg', {
       base64: file.assets[0].base64,
+    });
+
+    await imageFile.saveIPFS();
+    const imageHash = await imageFile.ipfs();
+    console.log(imageHash);
+    setImages([...images, imageHash]);
+    console.log('$$$', images);
+
+    const metadata = {
+      name: nftName,
+      description: nftDescription,
+      image: imageHash,
+    }
+    const metadataFile = new Moralis.File("metadata.json", {
+      base64: btoa(JSON.stringify(metadata)),
     });
 
     await metadataFile.saveIPFS();
     const metadataHash = await metadataFile.ipfs();
-    console.log(metadataHash);
-    setImages([...images, metadataHash]);
-    console.log('$$$', images);
     callingSmartContract(metadataHash);
 
   }
