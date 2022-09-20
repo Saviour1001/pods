@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 export const colors = {
-  while: '#FFFFFF',
+  white: '#FFFFFF',
   black: '#000000',
   primary: '#BEADEF',
   primaryLight: 'rgba(190, 173, 239, 0.3)',
